@@ -39,7 +39,7 @@ list = [4, 5, 6]
                 ConvertToToml = (value) => value is Uri uri ? uri.ToString() : null
             };
             var success = Toml.TryToModel<TestConfigWithUri>(text, out var result, out var diagnostics, null, options);
-            
+
             Assert.True(success);
             Assert.AreEqual(expected, result?.ServiceUri);
 
@@ -92,6 +92,7 @@ list = [4, 5, 6]
                 UInt64Value = 8,
                 Float32Value = 2.5f,
                 Float64Value = 2.5,
+                DecimalValue = 2.5m,
                 DateTime = new DateTime(1970, 1, 1),
                 DateTimeOffset = new DateTimeOffset(1980, 1, 1, 0, 23, 1, TimeSpan.FromHours(-2)),
 #if NET6_0_OR_GREATER
@@ -149,6 +150,7 @@ list = [4, 5, 6]
                 UInt64Value = 8,
                 Float32Value = 2.5f,
                 Float64Value = 2.5,
+                DecimalValue = 2.5m,
                 DateTime = new DateTime(1970, 1, 1),
                 DateTimeOffset = new DateTimeOffset(1980, 1, 1, 0, 23, 1, TimeSpan.FromHours(-2)),
 #if NET6_0_OR_GREATER
@@ -172,6 +174,7 @@ list = [4, 5, 6]
             model.UInt64Value = ulong.MaxValue;
             model.Float32Value = float.PositiveInfinity;
             model.Float64Value = double.PositiveInfinity;
+            model.DecimalValue = decimal.MaxValue;
             ValidateModel(model);
 
             static void ValidateModel(PrimitiveFieldsModel model)
@@ -320,6 +323,7 @@ list = [4, 5, 6]
             model.UInt64Value = null;
             model.Float32Value = null;
             model.Float64Value = null;
+            model.DecimalValue = null;
             model.DateTime = null;
             model.DateTimeOffset = null;
             model.DateOnly = null;
@@ -985,6 +989,7 @@ required = true";
             public ulong UInt64Value { get; set; }
             public float Float32Value { get; set; }
             public double Float64Value { get; set; }
+            public decimal DecimalValue { get; set; }
             public DateTime DateTime { get; set; }
             public DateTimeOffset DateTimeOffset { get; set; }
             public DateOnly DateOnly { get; set; }
@@ -995,7 +1000,7 @@ required = true";
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return Int8Value == other.Int8Value && Int16Value == other.Int16Value && Int32Value == other.Int32Value && Int64Value == other.Int64Value && UInt8Value == other.UInt8Value && UInt16Value == other.UInt16Value && UInt32Value == other.UInt32Value && UInt64Value == other.UInt64Value && Float32Value.Equals(other.Float32Value) && Float64Value.Equals(other.Float64Value) && DateTime.Equals(other.DateTime) && DateTimeOffset.Equals(other.DateTimeOffset) && DateOnly.Equals(other.DateOnly) && TimeOnly.Equals(other.TimeOnly) && TomlDateTime.Equals(other.TomlDateTime);
+                return Int8Value == other.Int8Value && Int16Value == other.Int16Value && Int32Value == other.Int32Value && Int64Value == other.Int64Value && UInt8Value == other.UInt8Value && UInt16Value == other.UInt16Value && UInt32Value == other.UInt32Value && UInt64Value == other.UInt64Value && Float32Value.Equals(other.Float32Value) && DecimalValue.Equals(other.DecimalValue) && Float64Value.Equals(other.Float64Value) && DateTime.Equals(other.DateTime) && DateTimeOffset.Equals(other.DateTimeOffset) && DateOnly.Equals(other.DateOnly) && TimeOnly.Equals(other.TimeOnly) && TomlDateTime.Equals(other.TomlDateTime);
             }
 
             public override bool Equals(object? obj)
@@ -1019,6 +1024,7 @@ required = true";
                 hashCode.Add(UInt64Value);
                 hashCode.Add(Float32Value);
                 hashCode.Add(Float64Value);
+                hashCode.Add(DecimalValue);
                 hashCode.Add(DateTime);
                 hashCode.Add(DateTimeOffset);
                 hashCode.Add(DateOnly);
@@ -1029,7 +1035,7 @@ required = true";
 
             public override string ToString()
             {
-                return $"{nameof(Int8Value)}: {Int8Value}, {nameof(Int16Value)}: {Int16Value}, {nameof(Int32Value)}: {Int32Value}, {nameof(Int64Value)}: {Int64Value}, {nameof(UInt8Value)}: {UInt8Value}, {nameof(UInt16Value)}: {UInt16Value}, {nameof(UInt32Value)}: {UInt32Value}, {nameof(UInt64Value)}: {UInt64Value}, {nameof(Float32Value)}: {Float32Value}, {nameof(Float64Value)}: {Float64Value}, {nameof(DateTime)}: {DateTime.ToUniversalTime()}, {nameof(DateTimeOffset)}: {DateTimeOffset.ToUniversalTime()}, {nameof(DateOnly)}: {DateOnly}, {nameof(TimeOnly)}: {TimeOnly}, {nameof(TomlDateTime)}: {TomlDateTime}";
+                return $"{nameof(Int8Value)}: {Int8Value}, {nameof(Int16Value)}: {Int16Value}, {nameof(Int32Value)}: {Int32Value}, {nameof(Int64Value)}: {Int64Value}, {nameof(UInt8Value)}: {UInt8Value}, {nameof(UInt16Value)}: {UInt16Value}, {nameof(UInt32Value)}: {UInt32Value}, {nameof(UInt64Value)}: {UInt64Value}, {nameof(Float32Value)}: {Float32Value}, {nameof(Float64Value)}: {Float64Value}, {nameof(DecimalValue)}: {DecimalValue}, {nameof(DateTime)}: {DateTime.ToUniversalTime()}, {nameof(DateTimeOffset)}: {DateTimeOffset.ToUniversalTime()}, {nameof(DateOnly)}: {DateOnly}, {nameof(TimeOnly)}: {TimeOnly}, {nameof(TomlDateTime)}: {TomlDateTime}";
             }
         }
 
@@ -1045,6 +1051,7 @@ required = true";
             public ulong UInt64Value;
             public float Float32Value;
             public double Float64Value;
+            public decimal DecimalValue;
             public DateTime DateTime;
             public DateTimeOffset DateTimeOffset;
             public DateOnly DateOnly;
@@ -1055,7 +1062,7 @@ required = true";
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return Int8Value == other.Int8Value && Int16Value == other.Int16Value && Int32Value == other.Int32Value && Int64Value == other.Int64Value && UInt8Value == other.UInt8Value && UInt16Value == other.UInt16Value && UInt32Value == other.UInt32Value && UInt64Value == other.UInt64Value && Float32Value.Equals(other.Float32Value) && Float64Value.Equals(other.Float64Value) && DateTime.Equals(other.DateTime) && DateTimeOffset.Equals(other.DateTimeOffset) && DateOnly.Equals(other.DateOnly) && TimeOnly.Equals(other.TimeOnly) && TomlDateTime.Equals(other.TomlDateTime);
+                return Int8Value == other.Int8Value && Int16Value == other.Int16Value && Int32Value == other.Int32Value && Int64Value == other.Int64Value && UInt8Value == other.UInt8Value && UInt16Value == other.UInt16Value && UInt32Value == other.UInt32Value && UInt64Value == other.UInt64Value && Float32Value.Equals(other.Float32Value) && Float64Value.Equals(other.Float64Value) && DecimalValue.Equals(other.DecimalValue) && DateTime.Equals(other.DateTime) && DateTimeOffset.Equals(other.DateTimeOffset) && DateOnly.Equals(other.DateOnly) && TimeOnly.Equals(other.TimeOnly) && TomlDateTime.Equals(other.TomlDateTime);
             }
 
             public override bool Equals(object? obj)
@@ -1079,6 +1086,7 @@ required = true";
                 hashCode.Add(UInt64Value);
                 hashCode.Add(Float32Value);
                 hashCode.Add(Float64Value);
+                hashCode.Add(DecimalValue);
                 hashCode.Add(DateTime);
                 hashCode.Add(DateTimeOffset);
                 hashCode.Add(DateOnly);
@@ -1089,7 +1097,7 @@ required = true";
 
             public override string ToString()
             {
-                return $"{nameof(Int8Value)}: {Int8Value}, {nameof(Int16Value)}: {Int16Value}, {nameof(Int32Value)}: {Int32Value}, {nameof(Int64Value)}: {Int64Value}, {nameof(UInt8Value)}: {UInt8Value}, {nameof(UInt16Value)}: {UInt16Value}, {nameof(UInt32Value)}: {UInt32Value}, {nameof(UInt64Value)}: {UInt64Value}, {nameof(Float32Value)}: {Float32Value}, {nameof(Float64Value)}: {Float64Value}, {nameof(DateTime)}: {DateTime.ToUniversalTime()}, {nameof(DateTimeOffset)}: {DateTimeOffset.ToUniversalTime()}, {nameof(DateOnly)}: {DateOnly}, {nameof(TimeOnly)}: {TimeOnly}, {nameof(TomlDateTime)}: {TomlDateTime}";
+                return $"{nameof(Int8Value)}: {Int8Value}, {nameof(Int16Value)}: {Int16Value}, {nameof(Int32Value)}: {Int32Value}, {nameof(Int64Value)}: {Int64Value}, {nameof(UInt8Value)}: {UInt8Value}, {nameof(UInt16Value)}: {UInt16Value}, {nameof(UInt32Value)}: {UInt32Value}, {nameof(UInt64Value)}: {UInt64Value}, {nameof(Float32Value)}: {Float32Value}, {nameof(Float64Value)}: {Float64Value}, {nameof(DecimalValue)}: {DecimalValue}, {nameof(DateTime)}: {DateTime.ToUniversalTime()}, {nameof(DateTimeOffset)}: {DateTimeOffset.ToUniversalTime()}, {nameof(DateOnly)}: {DateOnly}, {nameof(TimeOnly)}: {TimeOnly}, {nameof(TomlDateTime)}: {TomlDateTime}";
             }
         }
 
@@ -1105,6 +1113,7 @@ required = true";
             public ulong? UInt64Value { get; set; }
             public float? Float32Value { get; set; }
             public double? Float64Value { get; set; }
+            public decimal? DecimalValue { get; set; }
             public DateTime? DateTime { get; set; }
             public DateTimeOffset? DateTimeOffset { get; set; }
             public DateOnly? DateOnly { get; set; }
@@ -1125,6 +1134,7 @@ required = true";
                     && UInt64Value == other.UInt64Value
                     && ((!Float32Value.HasValue && !other.Float32Value.HasValue) || Float32Value.Equals(other.Float32Value))
                     && ((!Float64Value.HasValue && !other.Float64Value.HasValue) || Float64Value.Equals(other.Float64Value))
+                    && ((!DecimalValue.HasValue && !other.DecimalValue.HasValue) || DecimalValue.Equals(other.DecimalValue))
                     && ((!DateTime.HasValue && !other.DateTime.HasValue) || DateTime.Equals(other.DateTime))
                     && ((!DateTimeOffset.HasValue && !other.DateTimeOffset.HasValue) || DateTimeOffset.Equals(other.DateTimeOffset))
                     && ((!DateOnly.HasValue && !other.DateOnly.HasValue) || DateOnly.Equals(other.DateOnly))
@@ -1153,6 +1163,7 @@ required = true";
                 hashCode.Add(UInt64Value);
                 hashCode.Add(Float32Value);
                 hashCode.Add(Float64Value);
+                hashCode.Add(DecimalValue);
                 hashCode.Add(DateTime);
                 hashCode.Add(DateTimeOffset);
                 hashCode.Add(DateOnly);
@@ -1163,7 +1174,7 @@ required = true";
 
             public override string ToString()
             {
-                return $"{nameof(Int8Value)}: {Int8Value}, {nameof(Int16Value)}: {Int16Value}, {nameof(Int32Value)}: {Int32Value}, {nameof(Int64Value)}: {Int64Value}, {nameof(UInt8Value)}: {UInt8Value}, {nameof(UInt16Value)}: {UInt16Value}, {nameof(UInt32Value)}: {UInt32Value}, {nameof(UInt64Value)}: {UInt64Value}, {nameof(Float32Value)}: {Float32Value}, {nameof(Float64Value)}: {Float64Value}, {nameof(DateTime)}: {(DateTime.HasValue ? DateTime.Value.ToUniversalTime() : "null")}, {nameof(DateTimeOffset)}: {(DateTimeOffset.HasValue ? DateTimeOffset.Value.ToUniversalTime() : "null")}, {nameof(DateOnly)}: {DateOnly}, {nameof(TimeOnly)}: {TimeOnly}, {nameof(TomlDateTime)}: {TomlDateTime}";
+                return $"{nameof(Int8Value)}: {Int8Value}, {nameof(Int16Value)}: {Int16Value}, {nameof(Int32Value)}: {Int32Value}, {nameof(Int64Value)}: {Int64Value}, {nameof(UInt8Value)}: {UInt8Value}, {nameof(UInt16Value)}: {UInt16Value}, {nameof(UInt32Value)}: {UInt32Value}, {nameof(UInt64Value)}: {UInt64Value}, {nameof(Float32Value)}: {Float32Value}, {nameof(Float64Value)}: {Float64Value}, {nameof(DecimalValue)}: {DecimalValue}, {nameof(DateTime)}: {(DateTime.HasValue ? DateTime.Value.ToUniversalTime() : "null")}, {nameof(DateTimeOffset)}: {(DateTimeOffset.HasValue ? DateTimeOffset.Value.ToUniversalTime() : "null")}, {nameof(DateOnly)}: {DateOnly}, {nameof(TimeOnly)}: {TimeOnly}, {nameof(TomlDateTime)}: {TomlDateTime}";
             }
         }
 
@@ -1179,6 +1190,7 @@ required = true";
             public ulong? UInt64Value;
             public float? Float32Value;
             public double? Float64Value;
+            public decimal? DecimalValue;
             public DateTime? DateTime;
             public DateTimeOffset? DateTimeOffset;
             public DateOnly? DateOnly;
@@ -1199,6 +1211,7 @@ required = true";
                     && UInt64Value == other.UInt64Value
                     && ((!Float32Value.HasValue && !other.Float32Value.HasValue) || Float32Value.Equals(other.Float32Value))
                     && ((!Float64Value.HasValue && !other.Float64Value.HasValue) || Float64Value.Equals(other.Float64Value))
+                    && ((!DecimalValue.HasValue && !other.DecimalValue.HasValue) || DecimalValue.Equals(other.DecimalValue))
                     && ((!DateTime.HasValue && !other.DateTime.HasValue) || DateTime.Equals(other.DateTime))
                     && ((!DateTimeOffset.HasValue && !other.DateTimeOffset.HasValue) || DateTimeOffset.Equals(other.DateTimeOffset))
                     && ((!DateOnly.HasValue && !other.DateOnly.HasValue) || DateOnly.Equals(other.DateOnly))
@@ -1227,6 +1240,7 @@ required = true";
                 hashCode.Add(UInt64Value);
                 hashCode.Add(Float32Value);
                 hashCode.Add(Float64Value);
+                hashCode.Add(DecimalValue);
                 hashCode.Add(DateTime);
                 hashCode.Add(DateTimeOffset);
                 hashCode.Add(DateOnly);
@@ -1237,7 +1251,7 @@ required = true";
 
             public override string ToString()
             {
-                return $"{nameof(Int8Value)}: {Int8Value}, {nameof(Int16Value)}: {Int16Value}, {nameof(Int32Value)}: {Int32Value}, {nameof(Int64Value)}: {Int64Value}, {nameof(UInt8Value)}: {UInt8Value}, {nameof(UInt16Value)}: {UInt16Value}, {nameof(UInt32Value)}: {UInt32Value}, {nameof(UInt64Value)}: {UInt64Value}, {nameof(Float32Value)}: {Float32Value}, {nameof(Float64Value)}: {Float64Value}, {nameof(DateTime)}: {(DateTime.HasValue ? DateTime.Value.ToUniversalTime() : "null")}, {nameof(DateTimeOffset)}: {(DateTimeOffset.HasValue ? DateTimeOffset.Value.ToUniversalTime() : "null")}, {nameof(DateOnly)}: {DateOnly}, {nameof(TimeOnly)}: {TimeOnly}, {nameof(TomlDateTime)}: {TomlDateTime}";
+                return $"{nameof(Int8Value)}: {Int8Value}, {nameof(Int16Value)}: {Int16Value}, {nameof(Int32Value)}: {Int32Value}, {nameof(Int64Value)}: {Int64Value}, {nameof(UInt8Value)}: {UInt8Value}, {nameof(UInt16Value)}: {UInt16Value}, {nameof(UInt32Value)}: {UInt32Value}, {nameof(UInt64Value)}: {UInt64Value}, {nameof(Float32Value)}: {Float32Value}, {nameof(Float64Value)}: {Float64Value}, {nameof(DecimalValue)}: {DecimalValue}, {nameof(DateTime)}: {(DateTime.HasValue ? DateTime.Value.ToUniversalTime() : "null")}, {nameof(DateTimeOffset)}: {(DateTimeOffset.HasValue ? DateTimeOffset.Value.ToUniversalTime() : "null")}, {nameof(DateOnly)}: {DateOnly}, {nameof(TimeOnly)}: {TimeOnly}, {nameof(TomlDateTime)}: {TomlDateTime}";
             }
         }
     }

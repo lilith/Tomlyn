@@ -154,7 +154,19 @@ public class TomlFormatHelper
         {
             return "-inf";
         }
+        // TODO: binary64 needs g17 to fully roundtrip per https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings#GFormatString
         return AppendDecimalPoint(value.ToString("g16", CultureInfo.InvariantCulture));
+    }
+
+    // add decimal
+    public static string ToString(decimal value)
+    {
+        // TOML specifies binary64, so to prevent parsing errors, we need to convert to double
+        // or otherwise get careful with representation.
+        // Example: Exception while trying to convert System.Double to type System.Decimal. Reason: Value was either too large or too small for a Decimal.
+        var doubleValue = (double) value;
+        var decimalValue = (decimal) doubleValue;
+        return AppendDecimalPoint(decimalValue.ToString("g15", CultureInfo.InvariantCulture));
     }
 
 

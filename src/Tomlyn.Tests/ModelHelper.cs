@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// Licensed under the BSD-Clause 2 license. 
+// Licensed under the BSD-Clause 2 license.
 // See license.txt file in the project root for full license information.
 using System;
 using System.Globalization;
@@ -61,6 +61,12 @@ namespace Tomlyn.Tests
                     {
                         {"type", "float"},
                         { "value",  tomlFloat == 0.0 ? "0" : TomlFormatHelper.ToString(tomlFloat)}
+                    };
+                case decimal tomlDecimal:
+                    return new JObject
+                    {
+                        {"type", "float"},
+                        { "value", tomlDecimal == 0.0m ? "0" : TomlFormatHelper.ToString(tomlDecimal)}
                     };
                 case long tomlInteger:
                     return new JObject

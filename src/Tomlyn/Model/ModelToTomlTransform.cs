@@ -104,7 +104,7 @@ internal class ModelToTomlTransform
     private string EscapeKey(string name)
     {
         if (string.IsNullOrWhiteSpace(name)) return $"\"{name.EscapeForToml()}\"";
-        
+
         // A-Za-z0-9_-
         foreach (var c in name)
         {
@@ -589,6 +589,10 @@ internal class ModelToTomlTransform
         else if (primitive is double f64)
         {
             _writer.Write(TomlFormatHelper.ToString(f64));
+        }
+        else if (primitive is decimal dec)
+        {
+            _writer.Write(TomlFormatHelper.ToString(dec));
         }
         else if (primitive is TomlDateTime tomlDateTime)
         {

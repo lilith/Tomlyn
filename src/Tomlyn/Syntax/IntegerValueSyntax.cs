@@ -1,8 +1,9 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// Licensed under the BSD-Clause 2 license. 
+// Licensed under the BSD-Clause 2 license.
 // See license.txt file in the project root for full license information.
 using System.Globalization;
 using Tomlyn.Helpers;
+using Tomlyn.Model;
 
 namespace Tomlyn.Syntax
 {
@@ -21,7 +22,7 @@ namespace Tomlyn.Syntax
         }
 
         /// <summary>
-        /// Creates an <see cref="IntegerValueSyntax"/> 
+        /// Creates an <see cref="IntegerValueSyntax"/>
         /// </summary>
         /// <param name="value">The integer value</param>
         public IntegerValueSyntax(long value) : this()
@@ -57,7 +58,7 @@ namespace Tomlyn.Syntax
 
         protected override string ToDebuggerDisplay()
         {
-            return $"{base.ToDebuggerDisplay()}: {TomlFormatHelper.ToString(Value)}";
+            return $"{base.ToDebuggerDisplay()}: {TomlFormatHelper.ToString(Value,TomlPropertyDisplayKind.Default)}";
         }
     }
 }
